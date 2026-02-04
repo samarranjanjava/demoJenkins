@@ -17,19 +17,19 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh """
+                bat """
                 docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                 """
             }
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Docker Image Security Scan (DevSecOps)') {
             steps {
-                sh """
+                bat """
                 trivy image --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
@@ -49,14 +49,14 @@ pipeline {
                     credentialsId: 'dockerhub-creds',
                     url: ''
                 ) {
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
 
         stage('Deploy Application') {
             steps {
-                sh """
+                bat """
                 docker stop springboot || true
                 docker rm springboot || true
                 docker run -d -p 8080:8080 --name springboot ${IMAGE_NAME}:${IMAGE_TAG}
