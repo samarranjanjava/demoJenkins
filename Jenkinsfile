@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/your-repo/spring-boot-app.git'
+                    url: 'https://github.com/samarranjanjava/demoJenkins.git'
             }
         }
 
