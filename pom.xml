@@ -30,12 +30,7 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-	 <repositories>
-        <repository>
-            <id>marytts-repo</id>
-            <url>https://marytts.github.io/marytts-repo</url>
-        </repository>
-    </repositories>
+	 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -53,33 +48,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-            <groupId>de.dfki.mary</groupId>
-            <artifactId>marytts-runtime</artifactId>
-            <version>5.2.1</version>
-            <exclusions>
-            	<exclusion>
-		            <groupId>de.dfki.lt.jtok</groupId>
-		            <artifactId>jtok-core</artifactId>
-		        </exclusion>
-                <exclusion>
-                    <groupId>gov.nist.math</groupId>
-                    <artifactId>Jampack</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.twmacinta</groupId>
-                    <artifactId>fast-md5</artifactId>
-                </exclusion>
-            </exclusions>
+		<!-- Swagger / OpenAPI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
         </dependency>
-
-    <dependency>
-        <groupId>de.dfki.mary</groupId>
-        <artifactId>voice-cmu-slt-hsmm</artifactId>
-        <version>5.2.1</version>
-    </dependency>
-
-
 	</dependencies>
 
 	<build>

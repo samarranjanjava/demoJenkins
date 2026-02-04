@@ -2,18 +2,11 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "your-dockerhub-username/springboot-app"
-        IMAGE_TAG  = "${BUILD_NUMBER}"
+        IMAGE_NAME = "samarranjanjava/springboot-app"
+        IMAGE_TAG  = "%BUILD_NUMBER%"
     }
 
     stages {
-
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/samarranjanjava/demoJenkins.git'
-            }
-        }
 
         stage('Build with Maven') {
             steps {
@@ -29,38 +22,49 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat """
-                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-                """
+                bat '''
+                docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
+                '''
             }
         }
 
         stage('Docker Image Security Scan (DevSecOps)') {
             steps {
-                bat """
-                trivy image --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
-                """
+                bat '''
+                trivy image --severity HIGH,CRITICAL %IMAGE_NAME%:%IMAGE_TAG%
+                '''
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat '''
+                    docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                    '''
+                }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry(
-                    credentialsId: 'dockerhub-creds',
-                    url: ''
-                ) {
-                    bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                }
+                bat '''
+                docker push %IMAGE_NAME%:%IMAGE_TAG%
+                '''
             }
         }
 
         stage('Deploy Application') {
             steps {
-                bat """
-                docker stop springboot || true
-                docker rm springboot || true
-                docker run -d -p 8080:8080 --name springboot ${IMAGE_NAME}:${IMAGE_TAG}
-                """
+                bat '''
+                docker stop springboot || exit 0
+                docker rm springboot || exit 0
+                docker run -d -p 8080:8080 --name springboot %IMAGE_NAME%:%IMAGE_TAG%
+                '''
             }
         }
     }
