@@ -28,7 +28,7 @@ pipeline {
 
         stage('Docker Image Security Scan (DevSecOps)') {
     		steps {
-        		bat "D:\\trivy_0.69.0_windows-64bit\\trivy.exe image --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}"
+        		bat "D:\\trivy_0.69.0_windows-64bit\\trivy.exe image --scanners vuln --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}"
     		}
 	    }
 
