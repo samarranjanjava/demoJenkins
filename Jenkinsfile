@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "samarranjanjava/springboot-app"
+        IMAGE_NAME = "2016a/springboot-app"
         IMAGE_TAG  = "${env.BUILD_NUMBER}"
     }
 
