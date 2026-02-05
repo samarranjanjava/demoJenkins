@@ -56,7 +56,7 @@ pipeline {
             steps {
                 bat """
                 docker stop springboot || echo Container not running
-                docker rm springboot || exit 0
+                docker rm springboot || echo Container not present
                 docker run -d -p 8080:8080 --name springboot ${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
