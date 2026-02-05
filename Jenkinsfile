@@ -32,6 +32,7 @@ pipeline {
     		}
 	    }*/
 	    
+	    
 	    stage('Docker Image Security Scan (DevSecOps)') {
 		    steps {
 		        echo "⚠️ Trivy not installed yet – skipping security scan"
@@ -63,7 +64,8 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 bat """
-                docker stop springboot || exit 0
+                docker stop springboot || echo Container not running
+                /*docker stop springboot || exit 0*/
                 docker rm springboot || exit 0
                 docker run -d -p 8080:8080 --name springboot ${IMAGE_NAME}:${IMAGE_TAG}
                 """
